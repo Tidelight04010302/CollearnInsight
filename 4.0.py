@@ -1341,7 +1341,7 @@ class Module(QWidget):
         
         # 创建下拉箭头标志（替换原来的按钮）
         self.dropdown_indicator = QLabel(self)
-        pixmap = QPixmap("D:/Users/毕业论文/工具开发/downarrow(1).png")
+        pixmap = QPixmap("downarrow(1).png")
         self.dropdown_indicator.setPixmap(pixmap.scaled(30, 20)) 
         self.dropdown_indicator.setStyleSheet("background-color: white;")
         self.dropdown_indicator.setAlignment(Qt.AlignBottom)
@@ -2819,7 +2819,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create("Fusion"))
     window = CombinedApplication()
-    window.setWindowIcon(QIcon('d:/Users/毕业论文/工具开发/logo-1种尺寸.png'))
+    window.setWindowIcon(QIcon('logo-1种尺寸.png'))
 
     
     

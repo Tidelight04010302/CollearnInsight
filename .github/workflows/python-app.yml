@@ -1,18 +1,16 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Build macOS App
+name: Build macOS App and Publish to GitHub Releases
 
 on:
   push:
     branches:
-      - main  # 当 main 分支有推送时触发
-
+     - main
 jobs:
   build-macos:
     runs-on: macos-latest
+
+    # 显式声明权限，确保有权限创建 release 和上传资产
     permissions:
-      contents: write  # 允许创建 release 和上传资产
+      contents: write  # 允许发布 release 和上传资产
       packages: write  # 如果需要发布到 GitHub Packages
 
     steps:
@@ -24,7 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.9'  # 替换为你的 Python 版本
 
       # 3. 安装依赖
       - name: Install dependencies
@@ -38,32 +36,9 @@ jobs:
         run: |
           pyinstaller --onefile --windowed main.py
 
-      # 5. 生成动态标签名（提交哈希）
-      - name: Generate tag name
-        id: generate_tag
-        run: |
-          echo "tag_name=main-${{ github.sha:0:7 }}" >> $GITHUB_OUTPUT
-
-      # 6. 创建 GitHub Release
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      # 5. 上传构建结果（可选）
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ steps.generate_tag.outputs.tag_name }}  # 使用动态生成的标签名
-          release_name: Release for ${{ steps.generate_tag.outputs.tag_name }}
-          body: Automated release for macOS app from main branch
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # 7. 上传 Release 资产
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/main.app
-          asset_name: main.app
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: my-mac-app
+          path: dist/

@@ -3,7 +3,7 @@ matplotlib-inline==0.1.6
 numpy==2.2.6
 openpyxl==3.1.5
 os-exitcodes==1.0.1
-pandas==2.1.1
+pandas==2.2.3
 PyQt5==5.15.11
 PyQt5-Qt5==5.15.2
 PyQt5_sip==12.17.0

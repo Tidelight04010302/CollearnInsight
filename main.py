@@ -1341,7 +1341,11 @@ class Module(QWidget):
         
         # 创建下拉箭头标志（替换原来的按钮）
         self.dropdown_indicator = QLabel(self)
-        pixmap = QPixmap("downarrow(1).png")
+        # 获取当前脚本所在目录的绝对路径
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # 构建图片的绝对路径
+        imagepath = os.path.join(current_dir, 'downarrow(1).png')
+        pixmap = QPixmap(imagepath)
         self.dropdown_indicator.setPixmap(pixmap.scaled(30, 20)) 
         self.dropdown_indicator.setStyleSheet("background-color: white;")
         self.dropdown_indicator.setAlignment(Qt.AlignBottom)

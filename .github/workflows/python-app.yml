@@ -11,11 +11,9 @@ on:
 jobs:
   build-macos:
     runs-on: macos-latest
-
-    # 显式声明权限，确保有权限创建 release 和上传资产
     permissions:
-      contents: write  # 允许发布 release 和上传资产
-      packages: write  # 如果需要发布到 GitHub Packages
+      contents: write
+      packages: write
 
     steps:
       # 1. 检出代码
@@ -26,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'  # 替换为你的 Python 版本
+          python-version: '3.11'
 
       # 3. 安装依赖
       - name: Install dependencies
@@ -40,27 +38,20 @@ jobs:
         run: |
           pyinstaller --onefile --windowed main.py
 
-      # 5. 上传构建结果（可选）
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: my-mac-app
-          path: dist/
-
-      # 6. 创建 GitHub Release
+      # 5. 创建 GitHub Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref | split('refs/tags/', '') }}  # 提取标签名（如 v1.0.0）
+          release_name: Release ${{ github.ref | split('refs/tags/', '') }}
           body: Automated release for macOS app
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 显式传递 GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 7. 上传 Release 资产
+      # 6. 上传 Release 资产
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         with:
@@ -69,4 +60,4 @@ jobs:
           asset_name: main.app
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 显式传递 GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

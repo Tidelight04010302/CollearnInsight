@@ -1,47 +1,49 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Python application
+name: Build Linux App and Upload Build Artifacts
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches:
+      - 'main'  # 当 main 分支有推送时触发
 
 jobs:
-  build:
-
+  build-linux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 允许上传构建结果（Artifacts）
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Build with PyInstaller
-      run: |
-        pyinstaller --onefile --noconfirm main.py
-        # 上传构建结果（可选）
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: CollearnInsight
-        path: dist/
-      
+      # 2. 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # 3. 安装系统依赖（根据你的项目需求调整）
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1 libgomp1  # 示例依赖，根据项目需求添加
+
+      # 4. 安装 Python 依赖
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      # 5. 打包 Python 应用（使用 PyInstaller）
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --onefile --noconfirm main.py
+
+      # 6. 上传构建结果（Artifacts）
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-linux-app  # 构建结果名称
+          path: dist/main     # PyInstaller 生成的 Linux 可执行文件路径
+          

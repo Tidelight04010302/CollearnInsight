@@ -2819,9 +2819,13 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create("Fusion"))
     window = CombinedApplication()
-    window.setWindowIcon(QIcon('logo-1种尺寸.png'))
 
-    
-    
+    # 获取当前脚本所在目录的绝对路径
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 构建图片的绝对路径
+    image_path = os.path.join(current_dir, 'logo-1种尺寸.png')
+
+    window.setWindowIcon(QIcon(image_path))
+  
     window.show()
     sys.exit(app.exec_())

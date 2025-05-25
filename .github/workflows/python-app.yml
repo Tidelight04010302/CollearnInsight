@@ -6,14 +6,14 @@ name: Build macOS App
 on:
   push:
     branches:
-      - main
+      - main  # 当 main 分支有推送时触发
 
 jobs:
   build-macos:
     runs-on: macos-latest
     permissions:
-      contents: write
-      packages: write
+      contents: write  # 允许创建 release 和上传资产
+      packages: write  # 如果需要发布到 GitHub Packages
 
     steps:
       # 1. 检出代码
@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.9'
 
       # 3. 安装依赖
       - name: Install dependencies
@@ -38,20 +38,26 @@ jobs:
         run: |
           pyinstaller --onefile --windowed main.py
 
-      # 5. 创建 GitHub Release
+      # 5. 生成动态标签名（提交哈希）
+      - name: Generate tag name
+        id: generate_tag
+        run: |
+          echo "tag_name=main-${{ github.sha:0:7 }}" >> $GITHUB_OUTPUT
+
+      # 6. 创建 GitHub Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref | split('refs/tags/', '') }}  # 提取标签名（如 v1.0.0）
-          release_name: Release ${{ github.ref | split('refs/tags/', '') }}
-          body: Automated release for macOS app
+          tag_name: ${{ steps.generate_tag.outputs.tag_name }}  # 使用动态生成的标签名
+          release_name: Release for ${{ steps.generate_tag.outputs.tag_name }}
+          body: Automated release for macOS app from main branch
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 6. 上传 Release 资产
+      # 7. 上传 Release 资产
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         with:

@@ -2939,12 +2939,18 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create("Fusion"))
     window = CombinedApplication()
-    import os
-
-    # 获取当前脚本所在目录的绝对路径
-    # 构建图片的绝对路径
+    def resource_path(relative_path):
+        """ Get the absolute path to the resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+    
+        return os.path.join(base_path, relative_path)
+    
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    logoimage_path = os.path.join(current_dir, 'logo-1种尺寸.png')
+    logoimage_path = resource_path('logo-1种尺寸.png')
 
     window.setWindowIcon(QIcon(logoimage_path))  # 修改为相对路径
     window.show()

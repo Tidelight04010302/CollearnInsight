@@ -1,7 +1,10 @@
 # .github/workflows/test.yml (GitHub Actions示例)
 name: 应用测试
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'  # 当 main 分支有推送时触发
 
 jobs:
   test:

@@ -42,3 +42,4 @@ jobs:
         with:
           name: my-mac-app
           path: dist/
+          retention-days: 3

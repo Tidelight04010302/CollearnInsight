@@ -34,7 +34,7 @@ jobs:
       # 5. 打包 Python 应用（使用 PyInstaller）
       - name: Build with PyInstaller
         run: |
-          pyinstaller --onedir --contents-directory=resources --windowed --icon=logo1.ico main.py
+          pyinstaller --onedir --windowed --icon=logo1.ico main.py
 
       # 6. 上传构建结果（Artifacts）
       - name: Upload Build Artifact

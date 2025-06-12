@@ -25,8 +25,22 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from collections import defaultdict
 # 在文件顶部已导入的模块下方添加
 import json
+def get_app_dir():
+    """获取应用程序运行时的根目录"""
+    if getattr(sys, 'frozen', False):  # 打包后
+        return os.path.dirname(sys.executable)
+    else:  # 开发环境
+        return os.path.dirname(os.path.abspath(__file__))
 
-ARCHIVE_FILE = os.path.join(./dist/data, "archive.json")
+# 构建 data 目录路径（可写目录）
+data_dir = os.path.join(get_app_dir(), "data")
+
+# 创建目录（如果不存在）
+os.makedirs(data_dir, exist_ok=True)
+
+# 构建 archive.json 文件路径
+ARCHIVE_FILE = os.path.join(data_dir, "archive.json")
+
 class CombinedApplication(QMainWindow):
     def __init__(self):
         super().__init__()

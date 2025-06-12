@@ -34,12 +34,12 @@ jobs:
       # 5. 打包 Python 应用（使用 PyInstaller）
       - name: Build with PyInstaller
         run: |
-          pyinstaller --onedir --windowed --icon=logo1.ico main.py
+          pyinstaller --onefile --windowed --icon=logo1.ico main.py
 
       # 6. 上传构建结果（Artifacts）
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: my-windows-app  # 构建结果名称
-          path: dist/           # 上传 dist 目录下的所有内容
+          path: dist/main.exe           # 上传 dist 目录下的所有内容
           retention-days: 3     # 构建结果保留天数

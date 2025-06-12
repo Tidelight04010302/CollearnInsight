@@ -25,25 +25,15 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from collections import defaultdict
 # 在文件顶部已导入的模块下方添加
 import json
-from pathlib import Path
-
-def get_app_data_dir():
-    """获取用户 AppData 目录下的应用专属文件夹"""
-    if sys.platform == 'win32':
-        app_data_dir = os.getenv('APPDATA')
-    elif sys.platform == 'darwin':
-        app_data_dir = str(Path.home() / 'Library' / 'Application Support')
+def get_app_dir():
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
     else:
-        app_data_dir = str(Path.home() / '.config')
-    
-    app_name = "Learnlysis"  # 替换为你的应用程序名称
-    full_path = os.path.join(app_data_dir, app_name)
-    os.makedirs(full_path, exist_ok=True)
-    return full_path
+        return os.path.dirname(os.path.abspath(__file__))
 
-# 获取文件保存路径
-archive_dir = get_app_data_dir()
-ARCHIVE_FILE = os.path.join(archive_dir, "archive.json")
+resources_dir = os.path.join(get_app_dir(), "resources")
+os.makedirs(resources_dir, exist_ok=True)
+ARCHIVE_FILE = os.path.join(resources_dir, "archive.json")
 class CombinedApplication(QMainWindow):
     def __init__(self):
         super().__init__()

@@ -25,15 +25,8 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from collections import defaultdict
 # 在文件顶部已导入的模块下方添加
 import json
-def get_app_dir():
-    if getattr(sys, 'frozen', False):
-        return os.path.dirname(sys.executable)
-    else:
-        return os.path.dirname(os.path.abspath(__file__))
 
-resources_dir = os.path.join(get_app_dir(), "resources")
-os.makedirs(resources_dir, exist_ok=True)
-ARCHIVE_FILE = os.path.join(resources_dir, "archive.json")
+ARCHIVE_FILE = os.path.join(./dist/, "archive.json")
 class CombinedApplication(QMainWindow):
     def __init__(self):
         super().__init__()

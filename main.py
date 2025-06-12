@@ -217,11 +217,23 @@ class CombinedApplication(QMainWindow):
     def save_archive(self):
         """保存存档文件"""
         try:
+            with open(os.path.join(data_dir, '.write_test'), 'w') as f:
+              f.write('test')
+            os.remove(os.path.join(data_dir, '.write_test'))
+        except PermissionError:
+            QMessageBox.critical(
+                    self,
+                    "权限错误",
+                    "程序没有写入权限，请以管理员身份运行\n"
+                    "或重新安装到有写入权限的目录"
+                  )
+        try:
             archive_data = self.get_archive_data()
             with open(ARCHIVE_FILE, "w", encoding="utf-8") as f:
                 json.dump(archive_data, f, ensure_ascii=False, indent=2)
         except Exception as e:
             print(f"存档失败: {str(e)}")
+        
 
     def load_archive(self):
         """加载存档文件"""

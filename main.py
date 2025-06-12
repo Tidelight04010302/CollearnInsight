@@ -26,7 +26,7 @@ from collections import defaultdict
 # 在文件顶部已导入的模块下方添加
 import json
 
-ARCHIVE_FILE = os.path.join(./dist/, "archive.json")
+ARCHIVE_FILE = os.path.join(./dist/data, "archive.json")
 class CombinedApplication(QMainWindow):
     def __init__(self):
         super().__init__()

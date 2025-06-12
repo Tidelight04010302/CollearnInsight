@@ -41,5 +41,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: my-windows-app  # 构建结果名称
-          path: dist\main.exe   # PyInstaller 生成的 Windows 可执行文件路径
-          retention-days: 7     # 构建结果保留天数
+          retention-days: 3     # 构建结果保留天数
